@@ -17,11 +17,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # 3. Directorio de trabajo
 WORKDIR /var/www/html
 
-# 4. Copiar archivos de Composer primero
+# 4. Copiar composer
 COPY composer.json composer.lock ./
 
 # 5. Instalar dependencias
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 # 6. Copiar el resto del proyecto
 COPY . .
