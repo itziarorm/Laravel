@@ -1,7 +1,6 @@
-# Usa la imagen oficial de PHP con Apache
 FROM php:8.2-apache
 
-# Instala dependencias necesarias, incluyendo el driver de PostgreSQL
+# 1. Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
     unzip \
     git \
@@ -12,24 +11,29 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     && docker-php-ext-install pdo pdo_pgsql pdo_mysql mbstring exif pcntl bcmath gd
 
-# Instala Composer
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
-    && php -r "unlink('composer-setup.php');"
+# 2. Instalar Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copia los archivos del proyecto al contenedor
-COPY . /var/www/html
-
-# Instala dependencias de Laravel
+# 3. ⚠️ ESTABLECER WORKDIR ANTES DE CUALQUIER COSA
 WORKDIR /var/www/html
-RUN composer install --no-dev --optimize-autoloader
 
-# Configura permisos
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
+# 4. Copiar composer.json primero (mejor para cache)
+COPY composer.json composer.lock ./
 
-# Expone el puerto 80
+# 5. Instalar dependencias
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# 6. Copiar el resto del proyecto
+COPY . .
+
+# 7. Permisos
+RUN chown -R www-www-data /var/www/html \
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache
+
+# 8. Habilitar mod_rewrite
+RUN a2enmod rewrite
+
 EXPOSE 80
 
 # Define el comando de inicio
