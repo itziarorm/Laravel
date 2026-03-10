@@ -1,7 +1,7 @@
-# Usa la imagen oficial de PHP con Apache
+# Usa imagen oficial PHP con Apache
 FROM php:8.2-apache
 
-# Instala dependencias necesarias, incluyendo el driver de PostgreSQL
+# Instala dependencias del sistema y extensiones de PHP
 RUN apt-get update && apt-get install -y \
     unzip \
     git \
@@ -10,17 +10,19 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql pdo_mysql mbstring exif pcntl bcmath gd
+    && docker-php-ext-install pdo pdo_pgsql pdo_mysql mbstring exif pcntl bcmath gd \
+    && a2enmod rewrite
 
-# Instala Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Copia los archivos del proyecto al contenedor
-COPY . /var/www/html
-
-# Instala dependencias de Laravel
+# Copia solo archivos de Composer primero
 WORKDIR /var/www/html
-RUN php composer.phar install --no-dev --optimize-autoloader
+COPY composer.json composer.lock ./
+
+# Ejecuta Composer sin dev y con optimización
+# Forzando memoria ilimitada y emulated prepares
+RUN php -d memory_limit=-1 /usr/bin/composer install --no-dev --optimize-autoloader --prefer-dist
+
+# Copia el resto del proyecto
+COPY . /var/www/html
 
 # Configura permisos
 RUN chown -R www-data:www-data /var/www/html \
@@ -30,5 +32,5 @@ RUN chown -R www-data:www-data /var/www/html \
 # Expone el puerto 80
 EXPOSE 80
 
-# Define el comando de inicio
-CMD ["php", "-S", "0.0.0.0:80", "-t", "public"]
+# Apache ya se inicia automáticamente en php:8.2-apache
+CMD ["apache2-foreground"]
