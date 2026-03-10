@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.4-apache
 
 # 1. Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
@@ -14,10 +14,10 @@ RUN apt-get update && apt-get install -y \
 # 2. Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 3. ⚠️ ESTABLECER WORKDIR ANTES DE CUALQUIER COSA
+# 3. Directorio de trabajo
 WORKDIR /var/www/html
 
-# 4. Copiar composer.json primero (mejor para cache)
+# 4. Copiar archivos de Composer primero
 COPY composer.json composer.lock ./
 
 # 5. Instalar dependencias
