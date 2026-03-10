@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Potion;
+use App\Models\Wizard;
 use Illuminate\Http\Request;
 
 class WizardController extends Controller
@@ -12,7 +12,7 @@ class WizardController extends Controller
      */
     public function index()
     {
-        return Wizard::with("potions", "ingredients")->get();
+        return Wizard::with("potions")->get();
     }
 
     /**
@@ -34,7 +34,7 @@ class WizardController extends Controller
      */
     public function show(string $id)
     {
-        return Wizard::with('potions', 'ingredients')->findOrFail($id);
+        return Wizard::with('potions')->findOrFail($id);
     }
 
     /**

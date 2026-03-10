@@ -13,11 +13,11 @@ class Ingredient extends Model
     protected $primaryKey = 'ingredient_id';
     public $timestamps = false;
 
-    protected $fillable = ['ingredient_name', 'price', 'rarity'];
+    protected $fillable = ['ingredient_id','ingredient_name', 'description', 'price', 'rarity'];
 
     public function potions(){
 
-        return $this->belongsToMany(Potion::class, 'potions_ingredients', 'ingredient_id', 'potion_id')
+        return $this->belongsToMany(Potion::class, 'potion_ingredients', 'ingredient_id', 'potion_id')
                     ->withPivot('qty');
     }
 }

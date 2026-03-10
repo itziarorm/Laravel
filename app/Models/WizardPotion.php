@@ -9,7 +9,7 @@ class WizardPotion extends Model
 {
     use HasFactory;
 
-    protected $table = 'wizards_potions';
+    protected $table = 'wizard_potions';
     public $timestamps = false;
 
     protected $fillable = ['wizard_id', 'potion_id', 'date_brewed'];

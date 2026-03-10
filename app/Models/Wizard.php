@@ -13,11 +13,11 @@ class Wizard extends Model
     protected $primaryKey = 'wizard_id';
     public $timestamps = false;
 
-    protected $fillable = ['name', 'age', 'magic_level'];
+    protected $fillable = ['wizard_id','name', 'age', 'magic_level'];
 
     public function potions(){
 
-        return $this->belongsToMany(Potion::class, 'wizards_potions', 'wizard_id', 'potion_id')
+        return $this->belongsToMany(Potion::class, 'wizard_potions', 'wizard_id', 'potion_id')
                     ->withPivot('date_brewed');
     }
 }

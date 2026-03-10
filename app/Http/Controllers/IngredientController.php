@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Potion;
+use App\Models\Ingredient;
 use Illuminate\Http\Request;
 
 class IngredientController extends Controller
@@ -12,7 +12,7 @@ class IngredientController extends Controller
      */
     public function index()
     {
-        return Ingredient::with("potions", "wizards")->get();
+        return Ingredient::with("potions")->get();
     }
 
     /**
@@ -22,6 +22,7 @@ class IngredientController extends Controller
     {
         $request->validate([
             'ingredient_name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
             'price' => 'required|integer|min:1',
             'rarity' => 'required|integer|min:1'
         ]);
@@ -34,7 +35,7 @@ class IngredientController extends Controller
      */
     public function show(string $id)
     {
-        return Ingredient::with('potions', 'wizards')->findOrFail($id);
+        return Ingredient::with('potions')->findOrFail($id);
     }
 
     /**
