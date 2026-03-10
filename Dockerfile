@@ -19,7 +19,7 @@ COPY composer.json composer.lock ./
 
 # Ejecuta Composer sin dev y con optimización
 # Forzando memoria ilimitada y emulated prepares
-RUN php -d memory_limit=-1 /usr/bin/composer install --no-dev --optimize-autoloader --prefer-dist
+RUN php composer install --prefer-dist --no-interaction
 
 # Copia el resto del proyecto
 COPY . /var/www/html
