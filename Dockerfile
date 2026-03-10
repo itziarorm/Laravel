@@ -20,7 +20,7 @@ COPY . /var/www/html
 
 # Instala dependencias de Laravel
 WORKDIR /var/www/html
-RUN composer.phar install --no-dev --optimize-autoloader
+RUN php composer.phar install --no-dev --optimize-autoloader
 
 # Configura permisos
 RUN chown -R www-data:www-data /var/www/html \
