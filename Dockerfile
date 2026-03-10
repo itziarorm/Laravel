@@ -17,7 +17,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # 3. Directorio de trabajo
 WORKDIR /var/www/html
 
-# 4. Copiar composer
+# 4. Copiar composer.json primero
 COPY composer.json composer.lock ./
 
 # 5. Instalar dependencias
@@ -27,7 +27,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-script
 COPY . .
 
 # 7. Permisos
-RUN chown -R www-www-data /var/www/html \
+RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage \
     && chmod -R 775 /var/www/html/bootstrap/cache
 
