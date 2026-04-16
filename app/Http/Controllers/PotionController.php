@@ -57,4 +57,10 @@ class PotionController extends Controller
         Potion::destroy($id);
         return response()->json(['message' => 'Potion deleted']);
     }
+
+    public function getCurativePotions(){
+
+        $potion = Potion::create(['curative'->TRUE]);
+        return $potion;
+    }
 }
